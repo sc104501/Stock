@@ -11,14 +11,23 @@ package site.tdbr.stock;
  */
 public class InItem{
     Item item;
-    double inPrice;
     int inNum;
-    public InItem(Item item,double price,int inNum){
+    double inPrice;
+    public InItem(Item item,int inNum,double inPrice){
         this.item=item;
-        this.inPrice=price;
         this.inNum=inNum;
+        this.inPrice=inPrice;
     }
     public double cost(){
         return this.inNum*this.inPrice;
+    }
+    @Override
+    protected Object clone() {
+        try{
+            return super.clone();
+        }catch (CloneNotSupportedException e){
+            System.err.println(e);
+        }
+        return null;
     }
 }

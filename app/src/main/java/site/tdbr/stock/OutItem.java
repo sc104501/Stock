@@ -11,17 +11,26 @@ package site.tdbr.stock;
  */
 public class OutItem {
     Item item;
-    double outPrice;
     int outNum;
-    public OutItem(Item item,double outPrice,int outNum){
+    double outPrice;
+    public OutItem(Item item,int outNum,double outPrice){
         this.item=item;
-        this.outPrice=outPrice;
         this.outNum=outNum;
+        this.outPrice=outPrice;
     }
     public double get(){
         return this.outPrice*this.outNum;
     }
     public double gain(){
         return (this.outPrice-this.item.price)*this.outNum;
+    }
+    @Override
+    protected Object clone() {
+        try{
+            return super.clone();
+        }catch (CloneNotSupportedException e){
+            System.err.println(e);
+        }
+        return null;
     }
 }

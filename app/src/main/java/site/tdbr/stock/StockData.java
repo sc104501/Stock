@@ -17,8 +17,8 @@ public class StockData {
 
     File all, stock, stockHis, inHis, outHis;
     List<Item> items;
-    List<Item> currentStock;
-    Map<Date, List<Item>> stockItemsHis;
+    Map<Integer,StockItem> currentStocks;
+    Map<Date, List<StockItem>> stockItemsHis;
     Map<Date, List<InItem>> inItemsHis;
     Map<Date, List<OutItem>> outItemsHis;
     static SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss");
@@ -31,7 +31,7 @@ public class StockData {
         this.inHis = new File(location + "inHis.txt");
         this.outHis = new File(location + "outHis.txt");
         items = new ArrayList<>();
-        currentStock =new ArrayList<>();
+        currentStocks =new LinkedHashMap<>();
         stockItemsHis = new LinkedHashMap<>();
         inItemsHis = new LinkedHashMap<>();
         outItemsHis = new LinkedHashMap<>();
@@ -75,21 +75,19 @@ public class StockData {
                 break;
             case ("stock.txt"):
                 for (List<String> line : info) {
-                    Item item = items.get(Integer.parseInt(line.get(0)));
-                    item.stock = Integer.parseInt(line.get(1));
-                    item.using = Boolean.parseBoolean(line.get(2));
+                    currentStocks.put(Integer.parseInt(line.get(0)),new StockItem(
+                            items.get(Integer.parseInt(line.get(0))),
+                            Integer.parseInt(line.get(1))));
                 }
                 break;
             case ("stockHis.txt"):
                 for (List<String> line : info) {
                     if (line.size() == 1) {
                         ldt = sdf.parse(line.get(0));
-                        stockItemsHis.put(ldt, new ArrayList<Item>());
+                        stockItemsHis.put(ldt, new ArrayList<StockItem>());
                     } else {
                         Item item = items.get(Integer.parseInt(line.get(0)));
-                        Item stockItem = new Item(item.id, item.stock);
-                        stockItem.using = true;
-                        stockItem.stock = Integer.parseInt(line.get(1));
+                        StockItem stockItem = new StockItem(item, Integer.parseInt(line.get(1)));
                         stockItemsHis.get(ldt).add(stockItem);
                     }
                 }
@@ -102,8 +100,8 @@ public class StockData {
                     } else {
                         Item item = items.get(Integer.parseInt(line.get(0)));
                         InItem ii = new InItem(item,
-                                Double.parseDouble(line.get(1)),
-                                Integer.parseInt(line.get(2))
+                                Integer.parseInt(line.get(1)),
+                                Double.parseDouble(line.get(2))
                         );
                         inItemsHis.get(ldt).add(ii);
                     }
@@ -117,8 +115,8 @@ public class StockData {
                     } else {
                         Item item = items.get(Integer.parseInt(line.get(0)));
                         OutItem oi = new OutItem(item,
-                                Double.parseDouble(line.get(1)),
-                                Integer.parseInt(line.get(2))
+                                Integer.parseInt(line.get(1)),
+                                Double.parseDouble(line.get(2))
                         );
                         outItemsHis.get(ldt).add(oi);
                     }
@@ -135,20 +133,19 @@ public class StockData {
                 System.err.println("Can not change \"all.txt\"");
                 break;
             case ("stock.txt"):
-                for (Item stockItem : items) {
-                    lines.add(String.valueOf(stockItem.id) + ","
-                            + String.valueOf(stockItem.stock) + ","
-                            + String.valueOf(stockItem.using));
+                for (Map.Entry<Integer,StockItem> entry : currentStocks.entrySet()) {
+                    lines.add(String.valueOf(entry.getKey()) + ","
+                            + String.valueOf(entry.getValue().stock));
                 }
                 saveContent(this.stock, lines);
                 break;
             case ("stockHis.txt"):
-                for (Map.Entry<Date, List<Item>> entry : stockItemsHis.entrySet()) {
+                for (Map.Entry<Date, List<StockItem>> entry : stockItemsHis.entrySet()) {
                     Date ldt = entry.getKey();
-                    List<Item> infoList = entry.getValue();
+                    List<StockItem> stockItems = entry.getValue();
                     lines.add(sdf.format(ldt));
-                    for (Item stockHisItem : infoList) {
-                        lines.add(String.valueOf(stockHisItem.id) + "," + stockHisItem.stock);
+                    for (StockItem stockHisItem : stockItems) {
+                        lines.add(String.valueOf(stockHisItem.item.id) + "," + stockHisItem.stock);
                     }
                 }
                 saveContent(this.stockHis, lines);
@@ -193,92 +190,97 @@ public class StockData {
         write(fileName, lines);
     }
 
-    public static double getStockValue(List<Item> items) {
+    public static double getStockValue(List<StockItem> stockItems) {
         double sumValue = 0;
-        for (Item stockItem : items) {
-            if (stockItem.using) {
-                sumValue += stockItem.price * stockItem.stock;
-            }
+        for (StockItem stockItem : stockItems) {
+            sumValue += stockItem.item.price * stockItem.stock;
         }
         return sumValue;
     }
 
-    public static int getStockNum(List<Item> items) {
+    public static int getStockNum(List<StockItem> stockItems) {
         int sumNum = 0;
-        for (Item stockItem : items) {
-            if (stockItem.using) {
+        for (StockItem stockItem : stockItems) {
                 sumNum += stockItem.stock;
-            }
         }
         return sumNum;
     }
 
-    public void in(List<List<String>> info) throws IOException {
+    //id,inNum,inPrice
+    public void in(Map<Integer,List<String>> info) throws IOException {
         Date ldt = Calendar.getInstance().getTime();
         //start backup
         //append stock info
-        List<Item> stockItems = new ArrayList<>();
-        for (Item item : this.items) {
-            if (item.using) {
-                stockItems.add(new Item(item.id,item.stock));
-            }
+        List<StockItem> stockItems = new ArrayList<>();
+        for(StockItem si:stockItems){
+            stockItems.add((StockItem) si.clone());
         }
         stockItemsHis.put(ldt, stockItems);
         //append inHis info
         List<InItem> inItems = new ArrayList<>();
-        for (List<String> line : info) {
-            Item item = items.get(Integer.parseInt(line.get(0)));
-            inItems.add(new InItem(item, Double.parseDouble(line.get(1)), Integer.parseInt(line.get(2))));
+        for (Map.Entry<Integer,List<String>> entry: info.entrySet()) {
+            inItems.add(new InItem(items.get(entry.getKey()),
+                    Integer.parseInt(entry.getValue().get(0)),
+                    Double.parseDouble(entry.getValue().get(1))));
         }
         inItemsHis.put(ldt, inItems);
         saveData(this.stockHis);
         saveData(this.inHis);
         //start in
         for (InItem inItem : inItems) {
-            inItem.item.stock += inItem.inNum;
+            StockItem si=currentStocks.get(inItem.item.id);
+            si.stock+=inItem.inNum;
         }
         saveData(this.stock);
     }
-
-    public void out(List<List<String>> info) throws IOException {
+    //id,outNum,outPrice
+    public void out(Map<Integer,List<String>> info) throws IOException {
         Date ldt = Calendar.getInstance().getTime();
         //start backup
         //append stock info
-        List<Item> stockItems = new ArrayList<>();
-        for (Item item : this.items) {
-            if (item.using) {
-                stockItems.add(new Item(item.id,item.stock));
-            }
+        List<StockItem> stockItems = new ArrayList<>();
+        for(StockItem si:stockItems){
+            stockItems.add((StockItem) si.clone());
         }
         stockItemsHis.put(ldt, stockItems);
-        //append outHis info
+        //append inHis info
         List<OutItem> outItems = new ArrayList<>();
-        for (List<String> line : info) {
-            Item item = items.get(Integer.parseInt(line.get(0)));
-            outItems.add(new OutItem(item, Double.parseDouble(line.get(1)), Integer.parseInt(line.get(2))));
+        for (Map.Entry<Integer,List<String>> entry: info.entrySet()) {
+            outItems.add(new OutItem(items.get(entry.getKey()),
+                    Integer.parseInt(entry.getValue().get(0)),
+                    Double.parseDouble(entry.getValue().get(1))));
         }
         outItemsHis.put(ldt, outItems);
-        //check
-        if(!rightOut(outItems)){
-            return;
-        }
         saveData(this.stockHis);
         saveData(this.outHis);
-        //start out
-
+        //start in
         for (OutItem outItem : outItems) {
-            outItem.item.stock -= outItem.outNum;
+            StockItem si=currentStocks.get(outItem.item.id);
+            si.stock+=outItem.outNum;
         }
         saveData(this.stock);
     }
 
-    public void changeUsing(List<Boolean> using) throws IOException{
-        if(using.size()!=items.size()){
+    public void changeUsing(List<Boolean> usings) throws IOException{
+        if(usings.size()!=items.size()){
             System.err.println("\"changeUsing\" input size error");
             return;
         }
-        for (Item stockItem : items) {
-            stockItem.using=using.get(stockItem.id);
+        for(Map.Entry<Integer,StockItem> entry:currentStocks.entrySet()){
+            if((usings.get(entry.getKey())==false)&&(entry.getValue().stock!=0)){
+                System.err.println("\"changeUsing\" try to delete "+items.get(entry.getKey())+" which stock is not 0");
+                return;
+            }
+        }
+        for (int i=0;i<usings.size();i++){
+            if(currentStocks.containsKey(i)&&(usings.get(i)==false)){
+                currentStocks.remove(i);
+                break;
+            }
+            if((!currentStocks.containsKey(i))&&(usings.get(i)==true)){
+                currentStocks.put(i,new StockItem(items.get(i),0));
+                break;
+            }
         }
         saveData(this.stock);
     }

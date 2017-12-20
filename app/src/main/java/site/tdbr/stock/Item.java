@@ -10,24 +10,13 @@ package site.tdbr.stock;
  * @author tdbr
  */
 public class Item {
-    int id;
-    boolean using;
-    String name;
-    double price;
-    int stock;
-    public Item(int id,int stock){
-        this.id=id;
-        this.using=true;
-        this.stock=stock;
-    }
+    final int id;
+    final String name;
+    final double price;
     public Item(int id,String name,double price){
         this.id=id;
         this.name=name;
         this.price=price;
-        this.using=false;
-    }
-    public double value(){
-        return this.price*this.stock;
     }
     public String getIDString(){
         String result=String.valueOf(this.id);
@@ -46,9 +35,8 @@ public class Item {
     public String getPriceString(){
         return StockData.dfDouble.format(this.price);
     }
-    public String getValueString(){return StockData.dfDouble.format(this.value());}
     @Override
     public String toString(){
-        return this.id+" "+this.name+" "+this.price;
+        return this.getIDString()+" "+this.name+" "+this.getPriceString();
     }
 }
