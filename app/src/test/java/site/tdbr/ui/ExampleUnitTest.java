@@ -1,4 +1,4 @@
-package site.tdbr.stock;
+package site.tdbr.ui;
 
 import org.junit.Test;
 

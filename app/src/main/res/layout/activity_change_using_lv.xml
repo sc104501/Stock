@@ -2,23 +2,20 @@
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <TextView
-        android:id="@+id/Name"
+        android:id="@+id/CUName"
         android:layout_weight="0.75"
         android:text="名称"/>
 
     <TextView
-        android:id="@+id/Price"
+        android:id="@+id/CUPrice"
         android:gravity="right"
         android:text="进价"/>
 
     <TextView
-        android:id="@+id/Number"
+        android:id="@+id/CUNumber"
         android:gravity="right"
         android:text="数量"/>
 
-    <TextView
-        android:id="@+id/Value"
-        android:gravity="right"
-        android:text="小计"/>
 </TableRow>

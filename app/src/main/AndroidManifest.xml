@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="site.tdbr.stock">
+    package="site.tdbr.ui">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -9,13 +12,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="site.tdbr.stock.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="site.tdbr.stock.ui.InActivity"
+            android:label="@string/title_activity_in"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name="site.tdbr.stock.ui.OutActivity" />
+        <activity android:name="site.tdbr.stock.ui.ChangeUsingActivity" />
+        <activity android:name="site.tdbr.stock.ui.InHistoryActivity" />
+        <activity android:name="site.tdbr.stock.ui.OutHistoryActivity" />
+        <activity android:name="site.tdbr.stock.ui.StockHistoryActivity"></activity>
     </application>
 
 </manifest>

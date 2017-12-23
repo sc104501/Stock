@@ -1,13 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="site.tdbr.stock.MainActivity">
+    tools:context="site.tdbr.ui.site.tdbr.stock.ui.MainActivity">
 
-    <ListView
-        android:id="@+id/itemListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TableRow>
+            <Button
+                android:id="@+id/inButton"
+                android:text="存入" />
+            <Button
+                android:id="@+id/outButton"
+                android:text="出售" />
+            <Button
+                android:id="@+id/changeUsingButton"
+                android:text="增减品种" />
+        </TableRow>
+        <TableRow>
+            <Button
+                android:id="@+id/inHistoryButton"
+                android:text="存入历史" />
+            <Button
+                android:id="@+id/outHistoryButton"
+                android:text="出售历史" />
+            <Button
+                android:id="@+id/stockHistoryButton"
+                android:text="库存历史" />
+        </TableRow>
+        <ListView
+            android:id="@+id/itemListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </TableLayout>
 </android.support.constraint.ConstraintLayout>
