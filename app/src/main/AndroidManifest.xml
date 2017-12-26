@@ -27,7 +27,7 @@
         <activity android:name="site.tdbr.stock.ui.ChangeUsingActivity" />
         <activity android:name="site.tdbr.stock.ui.InHistoryActivity" />
         <activity android:name="site.tdbr.stock.ui.OutHistoryActivity" />
-        <activity android:name="site.tdbr.stock.ui.StockHistoryActivity"></activity>
+        <activity android:name="site.tdbr.stock.ui.StockHistoryActivity" />
     </application>
 
 </manifest>

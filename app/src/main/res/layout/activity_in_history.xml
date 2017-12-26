@@ -4,6 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="site.tdbr.ui.site.tdbr.stock.ui.InHistoryActivity">
+    tools:context="site.tdbr.stock.ui.InHistoryActivity">
 
 </android.support.constraint.ConstraintLayout>
