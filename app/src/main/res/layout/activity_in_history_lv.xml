@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/IHDate"
+        android:layout_weight="0.75"
+        android:text="日期"/>
+
+    <TextView
+        android:id="@+id/IHNumber"
+        android:gravity="right"
+        android:text="数量"/>
+
+    <TextView
+        android:id="@+id/IHValue"
+        android:gravity="right"
+        android:text="总价值"/>
+
+</TableRow>

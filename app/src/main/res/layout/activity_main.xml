@@ -4,13 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="site.tdbr.ui.site.tdbr.stock.ui.MainActivity">
+    tools:context="site.tdbr.stock.ui.MainActivity">
 
-    <TableLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TableRow>
+        <TableRow
+            android:layout_weight="6">
             <Button
                 android:id="@+id/inButton"
                 android:text="存入" />
@@ -21,7 +23,8 @@
                 android:id="@+id/changeUsingButton"
                 android:text="增减品种" />
         </TableRow>
-        <TableRow>
+        <TableRow
+            android:layout_weight="6">
             <Button
                 android:id="@+id/inHistoryButton"
                 android:text="存入历史" />
@@ -32,9 +35,18 @@
                 android:id="@+id/stockHistoryButton"
                 android:text="库存历史" />
         </TableRow>
+
+        <TableRow
+            android:layout_weight="6.1">
+            <TextView
+                android:id="@+id/MInfo"
+                android:gravity="center" />
+
+        </TableRow>
+
         <ListView
             android:id="@+id/itemListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </TableLayout>
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>
